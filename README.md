@@ -1,4 +1,4 @@
-# Customer Churn Analysis (On Progress)
+# Customer Churn Analysis
 
 ## Table of Content
 
