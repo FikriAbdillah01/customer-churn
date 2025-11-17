@@ -12,4 +12,3 @@ def evaluate_model(model, feature_test, label_test):
 
     print('\nClassification Report: ')
     print(classification_report(label_test, y_pred))
-

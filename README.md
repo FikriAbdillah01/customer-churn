@@ -179,7 +179,7 @@ Semua library sudah tertulis di requirement.txt.
 
     3. Negative experiences or customer distrust of this service.
 
-### Analisa Akun-Akun Pelanggan
+### Customer Account Analysis
 
 <p align = center>
 <img width = 700 height = 300 src = "figs/churn_by_payment_method.png">
@@ -221,7 +221,7 @@ The discussion in this sub-chapter covers problems that exist in data such as nu
 
 ### Null Value
 
-Tidak ada null value (or NaN) pada dataset ini. 
+There are no null or nan values in this dataset. 
 
 ### Skewness
 
@@ -243,7 +243,7 @@ One component of the logistic regression equation is the coefficient. The coeffi
 
 $$P = \frac{1}{1 + e^{z}}$$
 
-where $z = \beta _0 + \beta _1 X_1$ which is known as linear regression formula, while $\beta _0$, $\beta _1$, dan $ X_1$ are intercept, coefficient, and independent variable.
+where $z = \beta _0 + \beta _1 X_1$ which is known as linear regression formula, while $\beta _0$, $\beta _1$, dan $ X_1$ are intercept, coefficient, and independent variable, respectively.
 
 <p align = center>
 <img width = 700 height = 600 src = "figs/logistic regression feature importance (1).png">
@@ -290,134 +290,24 @@ Decision trees have something similar to coefficients, called feature importance
 
 After we analyze the data, the result we get:
 
-1. Based on *Root Mean Square Error*, the score we get is around $0.3$. It means that the machine learning is accurate enough to predict the rest of the house price.
+1. **Demographic:** Churn customers are predominantly teenagers (or young adults) who are financially independent and unmarried.
 
-2. From the EDA step ([See Appendix B](#appendix-b-visualization)), The majority of homes were built between the 1900s and 2010s, typically featuring four rooms, a quite spacious garage cars, a lot of rooms, and several bathroom features. Notably, homes built in the 2000s tend to fetch slightly higher prices. Regardless of build year, most properties were sold in decent quailty.
+2. **Services:** Many of them choose telephone service (PhoneService) and internet service (InternetService). Internet service, especially fiber optic, is the service with the highest customer churn, while the opposite is true for DSL internet service.
 
-3. Based on the model prediction, the range price for most house of Iowa real estate is between $100.000 and $200.000 (not including tax or another additional bill).   
+3. **Account:** Customers tend to prefer month-to-month contracts and pay/renew their contracts using electronic checks. They also prefer to view their bills electronically because of the convenience of paperless billing.
+
+4. **Churn Factor:** Based on the calculation results of the two models, several factors that statistically influence churn are tenure duration, monthly contract (Month-to-Month Contract), fiber optic internet service (InternetService_Fiber Optic), total costs (TotalCharges), and monthly costs (MonthlyCharges).
 
 ### Recommendation
 
 Based on the analysis, we recommend that:
 
-1. The cost of the unlabeled houses is not far from the price-labeled ones, hence the clients do not worry about it and feel free to choose.
+1. There is a need for bundling services targeting young people that cover their needs such as gaming, streaming, music, and social media.
 
-2. For the people who wants to live in a simple, comfotable, and affordable home, Iowa real estate provides it. Moreover, most of them are liveable even the home is quite old (referring to the year it was built).
+2. In fiber optic services, investigate which parts make customers uncomfortable, whether it is the technical side, the price side, customer service, or transaction transparency.
 
-3. Before purchase the house in Iowa, ask yourself and your family what kind of house you need to stay, what is the most important house feature do you need, the number of family do you bring to stay together, and so on. It filters what kind of house do you want to have.   
+3. Optimization of payment and billing systems, such as diversifying payment methods such as e-wallet, mobile banking, credit cards, or auto-debit for ease of transactions.
 
-### Limitation
-
-Unfortunately, the things you need to consider about this project:
-
-1. The provided data is the list of houseprice in Iowa real estate in 2016, so it is unreliable information if you need the houseprice information in the other state or place. Moreover, the price of the house nowadays is rising up due to the inflation.
-
-2. The data still have numerous outliers and zero values even after preprocessing step.
-
-3. A few features with continous value is not well-distributed (skewed), so it affect to the prediction model.
-
-### References
-
-- [Anna Montoya, DataCanary. (2016). House Prices - Advanced Regression Techniques.](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques)
-
-- [Bureau Labor Statistics: County Employment and Wages in Iowa - Second Quarter 2016](https://www.bls.gov/regions/midwest/news-release/2016/pdf/countyemploymentandwages_iowa_20161230.pdf)
-
-### Appendix A: Feature Explanation
-
-First, we used a correlation to filter what the most influence feature of the house to the Sale Price.
-
-``` python
-#Exploratory data analysis (feature selection)
-k = 11
-plt.figure(figsize = (12,9))
-num_cols = df_train.select_dtypes(exclude = ['object'])
-cols = num_cols.corr(method = 'pearson').nlargest(k, 'SalePrice')['SalePrice'].index
-cm = np.corrcoef(num_cols[cols].values.T)
-sns.set(font_scale = 0.87)
-hm = sns.heatmap(cm, cbar = True, square = True, annot = True, fmt = '.2f', xticklabels = cols.values, yticklabels = cols.values)
-plt.title('Highest Correlation of House Price')
-plt.savefig('highest_corr_features.jpg')
-
-```
-
-![correlation-feature]()
-
-The table below show a short description of highest correlation feature.
-
-|No|Feature|Description|
-|--|--|--|
-|1|SalePrice|The Price of the house|
-|2|OveralQuall|Overall material and finish quality|
-|3|GrLivArea|Above grade (ground) living area square feet|
-|4|GarageCars|Size of garage in car capacity|
-|5|GarageArea|Size of garage in square feet|
-|6|TotalBsmtSF|Total square feet of basement area in square feet|
-|7|1stFlrSF|First Floor square feet|
-|8|FullBath| Full bathrooms above grade (ground)|
-|9|TotRmsAbvGrd|Total rooms above grade (does not include bathrooms)|
-|10|YearBuilt|Original construction date in Year|
-|11|YearRemodAdd|Remodel date in Year|
-
-### Appendix B: Visualization
-
-```python
-#SalePrice vs Yearbuild
-fig = plt.figure(figsize = (12,9))
-p = sns.jointplot(data = df_train, x = df_train['YearBuilt'], y= df_train['SalePrice'], kind = 'hex')
-p.fig.suptitle('House price vs year built')
-fig.tight_layout()
-plt.savefig('Distribution Plot of YearBuilt-SalePrice.jpg')
-```
-![Plot](Distribution Plot of YearBuilt-SalePrice.jpg)
-
-
-```python
-#Quality of the house and its cost 
-plt.figure(figsize = (10,5))
-sns.barplot(data = df_train, x = 'OverallQual', y = 'SalePrice')
-plt.title('House Price Based on Quality')
-plt.savefig('Quality Saleprice Barplot.jpg')
-```
-
-![plot]()
-
-```python
-#Counting the house based on the quality
-sns.countplot(df_train, x = df_train['OverallQual'])
-plt.title('Quality of the house')
-plt.savefig('overallquality_house', dpi = 200)
-```
-
-![countplot]()
-
-```python
-# House SalePrice Distribution
-#Gaussian Distribution of SalePrice
-from scipy import stats
-from scipy.stats import norm
-
-sns.histplot(df_train['SalePrice'], kde = True, stat = 'density')
-plt.savefig('densityplot', dpi=200)
-```
-
-![saleprice_yearbuild]()
-
-```python
-#Garage Area Density plot and the countplot of Garage Cars in Iowa Real Estate
-fig, axs = plt.subplots(1,2, figsize = (10,6))
-
-df_train['GarageArea'].plot(kind = 'density', ax = axs[0], xlabel = 'GarageArea', title = 'Distribution of Garage Area', fontsize = 8)
-sns.countplot(data = df_train, x = df_train['GarageCars'], ax = axs[1])
-fig.tight_layout()
-plt.savefig('garagecars_area', dpi = 200)
-
-```
-
-### Appendix C: Build a machine learning
-
-
-```python
-
-```
+4. Combine a monthly contract with a loyalty incentive (e.g. a discount on the service price after 3 consecutive months).
 
 

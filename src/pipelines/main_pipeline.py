@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 import seaborn as sns
-import preprocessing
+import src.pipelines.preprocessing as preprocessing
 import argparse
-import visualize
-import train
-import test_evaluate
+import src.pipelines.visualize as visualize
+import src.pipelines.train as train
+import src.pipelines.test_evaluate as test_evaluate
 from sklearn.model_selection import train_test_split
 
 link = 'data/telco_customer_churn.csv'
